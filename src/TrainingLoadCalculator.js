@@ -59,16 +59,6 @@ export default function TrainingLoadCalculator() {
     setResults({ baseLoads, variationLoads });
   };
 
-  const handleRatioChange = (exercise, newRatio) => {
-    setVariationRatios((prev) => ({
-      ...prev,
-      [lift]: {
-        ...prev[lift],
-        [exercise]: parseFloat(newRatio),
-      },
-    }));
-  };
-
   const handleKeyPress = (event) => {
     if (event.key === "Enter") {
       calculateLoad();
@@ -76,70 +66,74 @@ export default function TrainingLoadCalculator() {
   };
 
   return (
-    <div className="p-4 max-w-lg mx-auto">
-      <h1 className="text-xl font-bold mb-4">Training Load Calculator</h1>
-      <label className="block mb-2">Select Lift:</label>
+    <div className="p-6 max-w-xl mx-auto bg-white rounded-lg shadow-lg mt-10">
+      <h1 className="text-2xl font-bold text-center mb-6">Training Load Calculator</h1>
+      <label className="block text-gray-700 font-semibold mb-2">Select Lift:</label>
       <select
         value={lift}
         onChange={(e) => setLift(e.target.value)}
-        className="p-2 border rounded w-full mb-4"
+        className="p-3 border rounded-lg w-full mb-4 focus:ring-2 focus:ring-blue-400"
       >
         {Object.keys(variationRatios).map((liftName) => (
           <option key={liftName} value={liftName}>{liftName}</option>
         ))}
       </select>
-      <label className="block mb-2">Enter 1RM:</label>
+      <label className="block text-gray-700 font-semibold mb-2">Enter 1RM:</label>
       <input
         type="number"
         value={oneRM}
         onChange={(e) => setOneRM(e.target.value)}
         onKeyDown={handleKeyPress}
-        className="p-2 border rounded w-full mb-4"
+        className="p-3 border rounded-lg w-full mb-4 focus:ring-2 focus:ring-blue-400"
       />
       <button
         onClick={calculateLoad}
-        className="p-2 bg-blue-500 text-white rounded w-full"
+        className="p-3 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-lg w-full transition duration-300"
       >
         Calculate Training Loads
       </button>
       {results && (
-        <div className="mt-4">
-          <h2 className="text-lg font-bold mb-2">Training Loads for {lift}</h2>
-          <table className="w-full border-collapse border border-gray-300">
-            <thead>
-              <tr className="bg-gray-200">
-                <th className="border border-gray-300 px-4 py-2">%</th>
-                <th className="border border-gray-300 px-4 py-2">Weight (lbs)</th>
-              </tr>
-            </thead>
-            <tbody>
-              {results.baseLoads.map(({ percent, weight }, index) => (
-                <tr key={percent} className={index % 2 === 0 ? "bg-gray-100" : ""}>
-                  <td className="border border-gray-300 px-4 py-2">{percent}%</td>
-                  <td className="border border-gray-300 px-4 py-2">{weight} lbs</td>
+        <div className="mt-6">
+          <h2 className="text-xl font-bold text-center mb-4">Training Loads for {lift}</h2>
+          <div className="bg-gray-100 p-4 rounded-lg shadow-inner">
+            <table className="w-full border-collapse">
+              <thead>
+                <tr className="bg-blue-500 text-white">
+                  <th className="px-4 py-2">%</th>
+                  <th className="px-4 py-2">Weight (lbs)</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-          {results.variationLoads && results.variationLoads.map(({ name, loads }) => (
-            <div key={name} className="mt-4">
-              <h3 className="text-lg font-bold mb-2">{name} (Based on {lift} 1RM)</h3>
-              <table className="w-full border-collapse border border-gray-300">
-                <thead>
-                  <tr className="bg-gray-200">
-                    <th className="border border-gray-300 px-4 py-2">%</th>
-                    <th className="border border-gray-300 px-4 py-2">Weight (lbs)</th>
+              </thead>
+              <tbody>
+                {results.baseLoads.map(({ percent, weight }, index) => (
+                  <tr key={percent} className={index % 2 === 0 ? "bg-gray-200" : "bg-white"}>
+                    <td className="px-4 py-2 text-center">{percent}%</td>
+                    <td className="px-4 py-2 text-center">{weight} lbs</td>
                   </tr>
-                </thead>
-                <tbody>
-                  {loads.map(({ percent, weight }, index) => (
-                    <tr key={percent} className={index % 2 === 0 ? "bg-gray-100" : ""}>
-                      <td className="border border-gray-300 px-4 py-2">{percent}%</td>
-                      <td className="border border-gray-300 px-4 py-2">{weight} lbs</td>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          {results.variationLoads && results.variationLoads.map(({ name, loads }) => (
+            <div key={name} className="mt-6">
+              <h3 className="text-lg font-bold text-center mb-2">{name} (Based on {lift} 1RM)</h3>
+              <div className="bg-gray-100 p-4 rounded-lg shadow-inner">
+                <table className="w-full border-collapse">
+                  <thead>
+                    <tr className="bg-blue-500 text-white">
+                      <th className="px-4 py-2">%</th>
+                      <th className="px-4 py-2">Weight (lbs)</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody>
+                    {loads.map(({ percent, weight }, index) => (
+                      <tr key={percent} className={index % 2 === 0 ? "bg-gray-200" : "bg-white"}>
+                        <td className="px-4 py-2 text-center">{percent}%</td>
+                        <td className="px-4 py-2 text-center">{weight} lbs</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             </div>
           ))}
         </div>
